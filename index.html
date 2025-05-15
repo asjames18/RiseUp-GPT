@@ -10,6 +10,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- OneSignal SDK -->
+    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
+    <script>
+      window.OneSignal = window.OneSignal || [];
+      OneSignal.push(function() {
+        OneSignal.init({
+          appId: "YOUR_ONESIGNAL_APP_ID", // Replace with your OneSignal App ID
+          safari_web_id: "YOUR_SAFARI_WEB_ID", // Replace with your Safari Web ID if needed
+          notifyButton: {
+            enable: false, // We'll handle the prompt ourselves
+          },
+          allowLocalhostAsSecureOrigin: true, // For development
+        });
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -6,9 +6,12 @@ import OurWhy from './components/OurWhy'
 import LeadMagnet from './components/LeadMagnet'
 import AppPreview from './components/AppPreview'
 import Footer from './components/Footer'
+import { useOneSignal } from './hooks/useOneSignal'
+import ChatWidget from './components/ChatWidget'
 
 function App() {
   const [email, setEmail] = useState('')
+  const { sendSampleNotification } = useOneSignal()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
@@ -19,6 +22,7 @@ function App() {
       <LeadMagnet email={email} setEmail={setEmail} />
       <AppPreview />
       <Footer />
+      <ChatWidget />
     </div>
   )
 }
