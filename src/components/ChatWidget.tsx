@@ -1,6 +1,11 @@
 import React from 'react'
 
 const ChatWidget: React.FC = () => {
+  const conversationId = '6826554d632b2e7df5929236';
+  const response = await fetch(`/.netlify/functions/agentx-proxy?conversationId=${conversationId}`);
+  const data = await response.json();
+  console.log(data);
+
   return (
     <div className="fixed bottom-4 right-4 z-50">
       <button
