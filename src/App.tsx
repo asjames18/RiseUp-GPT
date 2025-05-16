@@ -7,7 +7,6 @@ import LeadMagnet from './components/LeadMagnet'
 import AppPreview from './components/AppPreview'
 import Footer from './components/Footer'
 import { useOneSignal } from './hooks/useOneSignal'
-import ChatWidget from './components/ChatWidget'
 
 function App() {
   useOneSignal();
@@ -23,7 +22,6 @@ function App() {
       <LeadMagnet email={email} setEmail={setEmail} />
       <AppPreview />
       <Footer />
-      <ChatWidget />
     </div>
   )
 }
