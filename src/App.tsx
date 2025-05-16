@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Hero from './components/Hero'
 import Features from './components/Features'
 import SuccessStories from './components/SuccessStories'
@@ -10,8 +10,9 @@ import { useOneSignal } from './hooks/useOneSignal'
 import ChatWidget from './components/ChatWidget'
 
 function App() {
+  useOneSignal();
+
   const [email, setEmail] = useState('')
-  const { sendSampleNotification } = useOneSignal()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
