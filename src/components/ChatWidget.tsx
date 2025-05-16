@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [messages, setMessages] = useState<{ sender: "user" | "bot"; text: string }[]>([
+    { sender: "bot", text: "Welcome! How can I help you?" },
+  ]);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     const fetchConversations = async () => {
@@ -13,16 +18,32 @@ const ChatWidget: React.FC = () => {
     fetchConversations();
   }, []);
 
-  // Remove or comment out sendMessage if not used
-  // const sendMessage = async (conversationId: string, message: string) => {
-  //   const response = await fetch('/.netlify/functions/agentx-send-message', {
-  //     method: 'POST',
-  //     headers: { 'Content-Type': 'application/json' },
-  //     body: JSON.stringify({ conversationId, message })
-  //   });
-  //   const data = await response.json();
-  //   return data;
-  // };
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+    const userMessage = input;
+    setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
+    setInput("");
+    setIsSending(true);
+    try {
+      const response = await fetch('/.netlify/functions/agentx-send-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage })
+      });
+      const data = await response.json();
+      setMessages((prev) => [...prev, { sender: "bot", text: data.reply || "No response from bot." }]);
+    } catch (err) {
+      setMessages((prev) => [...prev, { sender: "bot", text: "Sorry, there was an error sending your message." }]);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && !isSending) {
+      sendMessage();
+    }
+  };
 
   return (
     <>
@@ -54,9 +75,37 @@ const ChatWidget: React.FC = () => {
               </svg>
             </button>
           </div>
-          <div className="flex-1 p-4 overflow-y-auto">
-            {/* Chat content goes here */}
-            <p className="text-gray-700">Welcome! How can I help you?</p>
+          <div className="flex-1 p-4 overflow-y-auto space-y-2">
+            {/* Chat content */}
+            {messages.map((msg, idx) => (
+              <div key={idx} className={msg.sender === "user" ? "text-right" : "text-left"}>
+                <span className={
+                  msg.sender === "user"
+                    ? "inline-block bg-amber-100 text-gray-900 rounded-lg px-3 py-2 mb-1"
+                    : "inline-block bg-gray-200 text-gray-700 rounded-lg px-3 py-2 mb-1"
+                }>
+                  {msg.text}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="p-3 border-t border-gray-200 flex items-center gap-2">
+            <input
+              type="text"
+              className="flex-1 px-3 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-amber-500 text-gray-900"
+              placeholder="Type your message..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={handleInputKeyDown}
+              disabled={isSending}
+            />
+            <button
+              className="bg-amber-500 hover:bg-amber-600 text-white rounded-full px-4 py-2 font-semibold disabled:opacity-50"
+              onClick={sendMessage}
+              disabled={isSending || !input.trim()}
+            >
+              Send
+            </button>
           </div>
         </div>
       )}
