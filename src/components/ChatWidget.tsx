@@ -11,15 +11,16 @@ const ChatWidget: React.FC = () => {
     fetchConversations();
   }, []);
 
-  const sendMessage = async (conversationId, message) => {
-    const response = await fetch('/.netlify/functions/agentx-send-message', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ conversationId, message })
-    });
-    const data = await response.json();
-    return data;
-  };
+  // Remove or comment out sendMessage if not used
+  // const sendMessage = async (conversationId: string, message: string) => {
+  //   const response = await fetch('/.netlify/functions/agentx-send-message', {
+  //     method: 'POST',
+  //     headers: { 'Content-Type': 'application/json' },
+  //     body: JSON.stringify({ conversationId, message })
+  //   });
+  //   const data = await response.json();
+  //   return data;
+  // };
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
