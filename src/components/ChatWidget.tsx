@@ -1,10 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react';
 
 const ChatWidget: React.FC = () => {
-  const conversationId = '6826554d632b2e7df5929236';
-  const response = await fetch(`/.netlify/functions/agentx-proxy?conversationId=${conversationId}`);
-  const data = await response.json();
-  console.log(data);
+  useEffect(() => {
+    const fetchConversations = async () => {
+      const agentId = '6826554d632b2e7df5929233';
+      const response = await fetch(`/.netlify/functions/agentx-get-conversations?agentId=${agentId}`);
+      const data = await response.json();
+      console.log(data);
+    };
+    fetchConversations();
+  }, []);
+
+  const sendMessage = async (conversationId, message) => {
+    const response = await fetch('/.netlify/functions/agentx-send-message', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ conversationId, message })
+    });
+    const data = await response.json();
+    return data;
+  };
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -18,7 +33,7 @@ const ChatWidget: React.FC = () => {
         </svg>
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ChatWidget 
+export default ChatWidget; 
